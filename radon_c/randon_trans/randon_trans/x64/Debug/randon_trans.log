@@ -1,0 +1,3 @@
+﻿  main.cpp
+d:\毕设\gd_c\radon_c\randon_trans\randon_trans\main.cpp(21): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+  randon_trans.vcxproj -> D:\毕设\GD_C\radon_c\randon_trans\x64\Debug\randon_trans.exe
