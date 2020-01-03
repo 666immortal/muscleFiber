@@ -7,27 +7,61 @@ using namespace cv;
 
 #define MAXX(x, y)  ((x) > (y) ? (x) : (y)) // 定义宏函数，取最大值
 
-static void radon(const Mat input, double *theta, const int len_theta, double *P, int &len_P, double *r, int &len_r);
+static void radon(const Mat input, double *theta, const int len_theta, double *&P, int &len_P, double *&r, int &len_r);
 static void radonc(double *pPtr, const Mat iPtr, const double *radian, const int len_theta, const int xOrigin, const int yOrigin, const int rFirst, const int rSize);
 static void incrementRadon(double *pr, double pixel, double r);
 
 int main()
 {
-	Mat src = imread("bmc1.bmp");
+	Mat src = imread("bmc1.bmp", 0);
 
 	double theta_max = 170.0;
 	double theta_min = 10.0;
 	double theta_interval = 0.2;
-	int theta_num = (theta_max - theta_min) / theta_interval;
+	int theta_num = (theta_max - theta_min) / theta_interval + 1;
 	double *theta = new double[theta_num];
 	for (int i = 0; i < theta_num; i++)
 		theta[i] = theta_min + i * theta_interval;
 
 	double *P = NULL, *r = NULL;
 	int len_P, len_r;
+	Mat tmp;
+	src.convertTo(tmp, CV_64FC1);
+	cout << tmp.size() << endl;
+	cout << tmp.rows << tmp.cols << endl;
 
+	double *data;
+	double mean = 0; // 求平均数
+	for (int i = 0; i < tmp.rows; i++) 
+	{
+		data = tmp.ptr<double>(i);
+		for (int j = 0; j < tmp.cols; j++)
+		{
+			mean += data[j];
+			data[j] /= 255;
+		}			
+	}
+
+	mean = mean / (tmp.rows * tmp.cols);
+
+	// 再写一个整体减平均数的循环
+
+
+
+
+	data = tmp.ptr<double>(0);
+	for(int i = 0; i < tmp.cols; i++)
+		cout << "data: " << data[i] << endl;
+	
 	radon(src, theta, theta_num, P, len_P, r, len_r);
+
+	cout << "length of r : " << len_r << endl;
+	cout << "r: " << endl;
+	for (int i = 0; i < len_r; i++)
+		cout << r[i] << endl;
+
 	imshow("test", src);
+
 	waitKey(0);
 	delete []theta;
 	delete []P;
@@ -36,7 +70,7 @@ int main()
 	return 0;
 }
 
-static void radon(const Mat input, double *theta, const int len_theta, double *P, int &len_P, double *r, int &len_r) 
+static void radon(const Mat input, double *theta, const int len_theta, double *&P, int &len_P, double *&r, int &len_r) 
 {
 	const double deg2rad = 3.14159265358979 / 180.0;
 
@@ -58,8 +92,9 @@ static void radon(const Mat input, double *theta, const int len_theta, double *P
 	int rSize = rLast - rFirst + 1;
 
 	r = new double[rSize];
+	double *rPtr = r;
 	for (int k = rFirst; k <= rLast; k++)
-		*(r++) = (double)k;
+		*(rPtr++) = (double)k;
 	len_r = rSize;
 
 	// len_P是P的整体长度，如果要遍历P，则要注意存放顺序，角度数为行数
