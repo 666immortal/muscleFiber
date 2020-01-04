@@ -37,28 +37,44 @@ int main()
 		data = tmp.ptr<double>(i);
 		for (int j = 0; j < tmp.cols; j++)
 		{
-			mean += data[j];
 			data[j] /= 255;
+			mean += data[j];
 		}			
 	}
 
 	mean = mean / (tmp.rows * tmp.cols);
-
 	// 再写一个整体减平均数的循环
-
-
-
+	for (int i = 0; i < tmp.rows; i++)
+	{
+		data = tmp.ptr<double>(i);
+		for (int j = 0; j < tmp.cols; j++)
+		{
+			data[j] -= mean;
+		}
+	}
 
 	data = tmp.ptr<double>(0);
 	for(int i = 0; i < tmp.cols; i++)
 		cout << "data: " << data[i] << endl;
 	
-	radon(src, theta, theta_num, P, len_P, r, len_r);
+	radon(tmp, theta, theta_num, P, len_P, r, len_r);
 
+	cout << "length of P : " << len_P << endl;
 	cout << "length of r : " << len_r << endl;
+
 	cout << "r: " << endl;
 	for (int i = 0; i < len_r; i++)
 		cout << r[i] << endl;
+
+	int sizeP = len_P / theta_num;
+	int i = 0;
+	cout << "P : ";
+	for (int k = 0; k < 5; k++)
+		for (int j = 0; j < sizeP; j++)
+		{
+			cout << ++i << " : ";
+			cout << P[k * sizeP + j] << "  " << endl;
+		}			
 
 	imshow("test", src);
 
@@ -114,11 +130,11 @@ static void radonc(double *pPtr,  const Mat iPtr, const double *radian, const in
 	double x, y;
 	double r = 0;
 
-	Mat tmp;
-	iPtr.convertTo(tmp, CV_64FC1);
+	//Mat tmp;
+	//iPtr.convertTo(tmp, CV_64FC1);
 
-	int n_row = tmp.rows;
-	int n_col = tmp.cols;
+	int n_row = iPtr.rows;
+	int n_col = iPtr.cols;
 	xCosTable = new double[2 * n_col];
 	ySinTable = new double[2 * n_row];
 
@@ -143,7 +159,7 @@ static void radonc(double *pPtr,  const Mat iPtr, const double *radian, const in
 			ySinTable[2 * m + 1] = (y + 0.25) * sine;
 		}
 
-		pixelPtr = (double *)tmp.data;
+		pixelPtr = (double *)iPtr.data;
 		for (int n = 0; n < n_col; n++)
 		{
 			for (int m = 0; m < n_row; m++)
@@ -168,7 +184,6 @@ static void radonc(double *pPtr,  const Mat iPtr, const double *radian, const in
 			}
 		}
 	}
-
 	// 释放内存
 	delete []xCosTable;
 	delete []ySinTable;
