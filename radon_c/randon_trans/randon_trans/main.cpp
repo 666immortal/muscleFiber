@@ -28,7 +28,6 @@ int main()
 	Mat tmp;
 	src.convertTo(tmp, CV_64FC1);
 	cout << tmp.size() << endl;
-	cout << tmp.rows << tmp.cols << endl;
 
 	double *data;
 	double mean = 0; // 求平均数
@@ -53,23 +52,25 @@ int main()
 		}
 	}
 
-	data = tmp.ptr<double>(0);
-	for(int i = 0; i < tmp.cols; i++)
-		cout << "data: " << data[i] << endl;
+	//data = tmp.ptr<double>(0);
+	//for(int i = 0; i < tmp.cols; i++)
+	//	cout << "data: " << data[i] << endl;
 	
+	/*long t1 = getTickCount();*/
 	radon(tmp, theta, theta_num, P, len_P, r, len_r);
+	//long t2 = getTickCount();
+	//cout << ((t2 - t1) * 0.001) << "秒" << endl;
+	//cout << "length of P : " << len_P << endl;
+	//cout << "length of r : " << len_r << endl;
 
-	cout << "length of P : " << len_P << endl;
-	cout << "length of r : " << len_r << endl;
-
-	cout << "r: " << endl;
-	for (int i = 0; i < len_r; i++)
-		cout << r[i] << endl;
+	//cout << "r: " << endl;
+	//for (int i = 0; i < len_r; i++)
+	//	cout << r[i] << endl;
 
 	int sizeP = len_P / theta_num;
 	int i = 0;
-	cout << "P : ";
-	for (int k = 0; k < 5; k++)
+	cout << "P : " << endl;
+	for (int k = 0; k < 3; k++)
 		for (int j = 0; j < sizeP; j++)
 		{
 			cout << ++i << " : ";
@@ -130,9 +131,6 @@ static void radonc(double *pPtr,  const Mat iPtr, const double *radian, const in
 	double x, y;
 	double r = 0;
 
-	//Mat tmp;
-	//iPtr.convertTo(tmp, CV_64FC1);
-
 	int n_row = iPtr.rows;
 	int n_col = iPtr.cols;
 	xCosTable = new double[2 * n_col];
@@ -160,25 +158,27 @@ static void radonc(double *pPtr,  const Mat iPtr, const double *radian, const in
 		}
 
 		pixelPtr = (double *)iPtr.data;
-		for (int n = 0; n < n_col; n++)
+
+		// 原先这里有一个bug，处理后的数据不一致，交换了n_row和n_col的位置之后，结果就与MATLAB一致了
+		for (int n = 0; n < n_row; n++)
 		{
-			for (int m = 0; m < n_row; m++)
+			for (int m = 0; m < n_col; m++)
 			{
 				double pixel = *pixelPtr++;
 				if (pixel != 0.0)
 				{
 					pixel *= 0.25;
 					
-					r = xCosTable[2 * n] + ySinTable[2 * m] - rFirst;
+					r = xCosTable[2 * m] + ySinTable[2 * n] - rFirst;
 					incrementRadon(pr, pixel, r);
 
-					r = xCosTable[2 * n + 1] + ySinTable[2 * m] - rFirst;
+					r = xCosTable[2 * m + 1] + ySinTable[2 * n] - rFirst;
 					incrementRadon(pr, pixel, r);
 
-					r = xCosTable[2 * n] + ySinTable[2 * m + 1] - rFirst;
+					r = xCosTable[2 * m] + ySinTable[2 * n + 1] - rFirst;
 					incrementRadon(pr, pixel, r);
 
-					r = xCosTable[2 * n + 1] + ySinTable[2 * m + 1] - rFirst;
+					r = xCosTable[2 * m + 1] + ySinTable[2 * n + 1] - rFirst;
 					incrementRadon(pr, pixel, r);
 				}
 			}
