@@ -1,11 +1,12 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 using namespace std;
 using namespace cv;
 
-#define MAXX(x, y)  ((x) > (y) ? (x) : (y)) // 定义宏函数，取最大值
+#define MAXX(x, y)  ((x) > (y) ? (x) : (y)) // 定义宏函数，该函数用于取两数中最大值
 
 static void radon(const Mat input, double *theta, const int len_theta, double *&P, int &len_P, double *&r, int &len_r);
 static void radonc(double *pPtr, const Mat iPtr, const double *radian, const int len_theta, const int xOrigin, const int yOrigin, const int rFirst, const int rSize);
@@ -56,10 +57,11 @@ int main()
 	//for(int i = 0; i < tmp.cols; i++)
 	//	cout << "data: " << data[i] << endl;
 	
-	/*long t1 = getTickCount();*/
+	// C++ PP149页计时方法（同时有讲到延时的方法）
+	clock_t t1 = clock();
 	radon(tmp, theta, theta_num, P, len_P, r, len_r);
-	//long t2 = getTickCount();
-	//cout << ((t2 - t1) * 0.001) << "秒" << endl;
+	clock_t t2 = clock();
+	cout << ((double)(t2 - t1) / CLOCKS_PER_SEC) << "秒" << endl;
 	//cout << "length of P : " << len_P << endl;
 	//cout << "length of r : " << len_r << endl;
 
@@ -67,7 +69,8 @@ int main()
 	//for (int i = 0; i < len_r; i++)
 	//	cout << r[i] << endl;
 
-	int sizeP = len_P / theta_num;
+	// 打印输出矩阵的一部分内容，用于检测结果是否正确
+	/*int sizeP = len_P / theta_num;
 	int i = 0;
 	cout << "P : " << endl;
 	for (int k = 0; k < 3; k++)
@@ -75,11 +78,12 @@ int main()
 		{
 			cout << ++i << " : ";
 			cout << P[k * sizeP + j] << "  " << endl;
-		}			
+		}		*/	
 
 	imshow("test", src);
 
 	waitKey(0);
+	// 后期改用智能指针
 	delete []theta;
 	delete []P;
 	delete []r;
