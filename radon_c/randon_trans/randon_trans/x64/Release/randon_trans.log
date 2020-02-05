@@ -1,1 +1,8 @@
-﻿  randon_trans.vcxproj -> D:\毕设\GD_C\radon_c\randon_trans\x64\Release\randon_trans.exe
+﻿  main.cpp
+d:\毕设\gd_c\radon_c\randon_trans\randon_trans\main.cpp(26): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+  正在生成代码
+  47 of 498 functions ( 9.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    60 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  randon_trans.vcxproj -> D:\毕设\GD_C\radon_c\randon_trans\x64\Release\randon_trans.exe
