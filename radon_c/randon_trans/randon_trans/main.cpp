@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cmath>
 #include <ctime>
+#include "MyArray.h"
 
 using namespace std;
 using namespace cv;
@@ -10,11 +11,11 @@ using namespace cv;
 #define MAXX(x, y)  ((x) > (y) ? (x) : (y)) // 定义宏函数，该函数用于取两数中最大值
 
 // radon变换外部调用接口
-void radon(const Mat input, double *theta, const int len_theta, double *&P, int &len_P, double *&r, int &len_r);
+void radon(const Mat &input, MyArray<double> &theta, MyArray<double> &P, MyArray<double> &r);
 // 内部调用函数
-static void radonc(double *pPtr, const Mat iPtr, const double *radian, const int len_radian, const int xOrigin, const int yOrigin, const int rFirst, const int rSize);
+static void radonc(double *pPtr, const Mat &iPtr, const double *radian, const int len_radian, const int xOrigin, const int yOrigin, const int rFirst, const int rSize);
 static inline void incrementRadon(double *pr, double pixel, double r);
-static void outputFile(double *P, int len_P, double *r, int len_r);
+static void outputFile(const MyArray<double> &P, const MyArray<double> &r);
 
 int main()
 {
@@ -24,13 +25,14 @@ int main()
 	double theta_min = 10.0;
 	double theta_interval = 0.2;
 	int theta_num = (theta_max - theta_min) / theta_interval + 1;
-
-	double *theta = new double[theta_num];
+	MyArray<double> theta(theta_num);
+	//double *theta = new double[theta_num];
 	for (int i = 0; i < theta_num; i++)
-		theta[i] = theta_min + i * theta_interval;
+		theta.pointer[i] = theta_min + i * theta_interval;
 
-	double *P = nullptr, *r = nullptr;
-	int len_P, len_r;
+	MyArray<double> P, r;
+	//double *P = nullptr, *r = nullptr;
+
 	Mat tmp;
 	src.convertTo(tmp, CV_64FC1);
 	//cout << tmp.size() << endl;
@@ -64,7 +66,7 @@ int main()
 	
 	// C++ PP149页计时方法（同时有讲到延时的方法）
 	clock_t t1 = clock();
-	radon(tmp, theta, theta_num, P, len_P, r, len_r);
+	radon(tmp, theta, P, r);
 	clock_t t2 = clock();
 	cout << "总用时：" << ((double)(t2 - t1) / CLOCKS_PER_SEC) << "秒" << endl;
 	//cout << "length of P : " << len_P << endl;
@@ -91,10 +93,6 @@ int main()
 
 	// 将结果输出到文件
 	//outputFile(P, len_P, r, len_r);
-	// 后期尝试改用智能指针
-	delete []theta;
-	delete []P;
-	delete []r;
 
 	return 0;
 }
@@ -109,15 +107,15 @@ int main()
 **  r：获取radon变换的计算结果r
 **  len_r：r数组中元素的个数
 ***/
-void radon(const Mat input, double *theta, const int len_theta, double *&P, int &len_P, double *&r, int &len_r) 
+void radon(const Mat &input, MyArray<double> &theta, MyArray<double> &P, MyArray<double> &r) 
 {
 	// 用于将角度转化为弧度
 	const double deg2rad = 3.14159265358979 / 180.0;
 
-	double *radian = new double[len_theta];
-	double *tmp_r = radian, *tmp_t = theta;
+	double *radian = new double[theta.len];
+	double *tmp_r = radian, *tmp_t = theta.pointer;
 	// 将角度转换为弧度
-	for (int k = 0; k < len_theta; k++)
+	for (int k = 0; k < theta.len; k++)
 		*(tmp_r++) = *(tmp_t++) * deg2rad; 
 
 	int M = input.rows;  // 输入图像的行数
@@ -133,16 +131,15 @@ void radon(const Mat input, double *theta, const int len_theta, double *&P, int 
 	int rSize = rLast - rFirst + 1;
 
 	//创建一个rSize行1列的矩阵，其实也就是一个数组
-	r = new double[rSize];
-	double *rPtr = r;
+	r.reset(rSize);
+	double *rPtr = r.pointer;
 	for (int k = rFirst; k <= rLast; k++)
 		*(rPtr++) = (double)k;
-	len_r = rSize;
 
 	// len_P是P的整体长度，如果要遍历P，则要注意存放顺序，角度数为行数
-	len_P = len_theta * rSize;
-	P = new double[len_P];
-	radonc(P, input, radian, len_theta, xOrigin, yOrigin, rFirst, rSize);
+	P.reset(theta.len * rSize);
+
+	radonc(P.pointer, input, radian, theta.len, xOrigin, yOrigin, rFirst, rSize);
 	
 	delete []radian;
 }// 调用完函数，记得释放P、r内存（这一个隐藏的bug有时间再修改）
@@ -158,7 +155,7 @@ void radon(const Mat input, double *theta, const int len_theta, double *&P, int 
 ** rFist：极坐标中初始点与变换原点的距离
 ** rSize：整个radon变换中极坐标的点之间的最远距离
 ***/
-static void radonc(double *pPtr,  const Mat iPtr, const double *radian, const int len_radian, const int xOrigin, const int yOrigin, const int rFirst, const int rSize)
+static void radonc(double *pPtr,  const Mat &iPtr, const double *radian, const int len_radian, const int xOrigin, const int yOrigin, const int rFirst, const int rSize)
 {
 	double cosine, sine;									// 当前弧度的cos和sin值
 	double *pr;											// 指向输出序列的指针
@@ -245,7 +242,7 @@ static inline void incrementRadon(double *pr, double pixel, double r)
 	pr[r1 + 1] += pixel * delta;			//两个点互相配合，提高精度 
 }
 
-static void outputFile(double *P, int len_P, double *r, int len_r)
+static void outputFile(const MyArray<double> &P, const MyArray<double> &r) 
 {
 	ofstream outFile1, outFile2;
 	outFile1.open("result_P");
@@ -258,11 +255,10 @@ static void outputFile(double *P, int len_P, double *r, int len_r)
 		exit(EXIT_FAILURE);
 	}
 
-
-	for (int i = 0; i < len_P; i++)
-		outFile1 << P[i] << endl;
-	for (int i = 0; i < len_r; i++)
-		outFile2 << r[i] << endl;
+	for (int i = 0; i < P.len; i++)
+		outFile1 << P.pointer[i] << endl;
+	for (int i = 0; i < r.len; i++)
+		outFile2 << r.pointer[i] << endl;
 	outFile1.close();
 	outFile2.close();
 }
