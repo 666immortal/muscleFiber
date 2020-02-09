@@ -1,39 +1,36 @@
-﻿  main.cpp
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(75): warning C4244: “=”: 从“const int”转换到“_Tp”，可能丢失数据
+﻿  Lines.cpp
+d:\毕设\gd_c\c_lines\lines\lines\lines.cpp(57): warning C4244: “=”: 从“const int”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(76): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\c_lines\lines\lines\lines.cpp(58): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(77): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\c_lines\lines\lines\lines.cpp(59): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(105): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\c_lines\lines\lines\lines.cpp(87): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(106): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\c_lines\lines\lines\lines.cpp(88): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(107): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\c_lines\lines\lines\lines.cpp(89): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(130): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(139): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-d:\毕设\gd_c\c_lines\lines\lines\main.cpp(145): warning C4305: “参数”: 从“double”到“_Tp”截断
-          with
-          [
-              _Tp=float
-          ]
+  main.cpp
+d:\毕设\gd_c\c_lines\lines\lines\main.cpp(19): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\毕设\gd_c\c_lines\lines\lines\main.cpp(28): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  正在生成代码...
   lines.vcxproj -> D:\毕设\GD_C\c_lines\lines\x64\Debug\lines.exe

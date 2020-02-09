@@ -1,0 +1,42 @@
+﻿  main.cpp
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(71): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(72): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(108): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(109): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(140): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(141): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(142): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\getcross\getcross\getcross\main.cpp(143): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+  getcross.vcxproj -> D:\毕设\GD_C\getcross\getcross\x64\Debug\getcross.exe
