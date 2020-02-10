@@ -140,10 +140,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="getCross.cpp" />
     <ClCompile Include="Lines.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="getCross.h" />
     <ClInclude Include="Lines.h" />
     <ClInclude Include="MyArray.h" />
   </ItemGroup>

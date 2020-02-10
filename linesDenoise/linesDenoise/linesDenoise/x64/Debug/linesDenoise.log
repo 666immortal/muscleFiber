@@ -1,0 +1,22 @@
+﻿  main.cpp
+d:\毕设\gd_c\linesdenoise\linesdenoise\linesdenoise\main.cpp(46): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\linesdenoise\linesdenoise\linesdenoise\main.cpp(47): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\linesdenoise\linesdenoise\linesdenoise\main.cpp(48): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\linesdenoise\linesdenoise\linesdenoise\main.cpp(49): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+  linesDenoise.vcxproj -> D:\毕设\GD_C\linesDenoise\linesDenoise\x64\Debug\linesDenoise.exe

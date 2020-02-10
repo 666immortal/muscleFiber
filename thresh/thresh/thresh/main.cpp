@@ -1,14 +1,28 @@
 #include <iostream>
 #include <algorithm>
+#include <opencv.hpp>
+#include <fstream>
+#include "ImgProp.h"
 
 using namespace std;
+using namespace cv;
 
+void inputFile(const char *filename, vector<double> &res);
 double imthresh(double *img, int len_img, double rate);
-bool cmp(double a, double b);
+
+static bool cmp(double a, double b)
+{
+	return a > b;
+}
 
 int main()
 {
+	vector<double> G;
+	inputFile("G.txt", G);
 
+	ImgProp::set(497, 801, G.data());
+
+	cout << ImgProp::getThresh(0.001) << endl;
 
 	return 0;
 }
@@ -23,7 +37,28 @@ double imthresh(double *data, int len_data, double rate)
 	return data[tmp];
 }
 
-bool cmp(double a, double b)
+void inputFile(const char *filename, vector<double> &res)
 {
-	return a > b;
+	ifstream fin;
+	fin.open(filename);
+	if (!fin.is_open())
+	{
+		cout << "Could not open the file " << filename << endl;
+		cout << "Program terminating." << endl;
+		exit(EXIT_FAILURE);
+	}
+	double tmp;
+	fin >> tmp;
+	while (fin.good())
+	{
+		res.push_back(tmp);
+		fin >> tmp;
+	}
+	if (fin.eof())
+		cout << "End of file reached.\n";
+	else if (fin.fail())
+		cout << "Input terminated by data mismatch.\n";
+	else
+		cout << "Input terminated for unknown reason.\n";
+	fin.close();
 }

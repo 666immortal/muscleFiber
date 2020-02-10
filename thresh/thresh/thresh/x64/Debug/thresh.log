@@ -1,0 +1,3 @@
+﻿  main.cpp
+d:\毕设\gd_c\thresh\thresh\thresh\main.cpp(36): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+  thresh.vcxproj -> D:\毕设\GD_C\thresh\thresh\x64\Debug\thresh.exe

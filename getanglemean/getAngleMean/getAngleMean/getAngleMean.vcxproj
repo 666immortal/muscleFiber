@@ -140,10 +140,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="getAngleMean.cpp" />
     <ClCompile Include="Lines.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="getAngleMean.h" />
     <ClInclude Include="Lines.h" />
     <ClInclude Include="MyArray.h" />
   </ItemGroup>

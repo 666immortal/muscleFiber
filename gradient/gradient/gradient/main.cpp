@@ -2,11 +2,12 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include "gradient.h"
 
 using namespace std;
 
 void inputFile(const char *filename, vector<double> &res);
-void gradient(const double *src, int row, int col, double *res);
+void outputFile(double *G, int len);
 
 int main()
 {
@@ -31,6 +32,8 @@ int main()
 			cout << "row: " << k + 1 << " col: " << j << "__";
 			cout << res[k * 497 + j] << "  " << endl;
 		}
+
+	outputFile(res, len_P);
 
 	delete[] res;
 
@@ -63,17 +66,18 @@ void inputFile(const char *filename, vector<double> &res)
 	fin.close();
 }
 
-// row = 497, col = 801
-void gradient(const double *src, const int row, const int col, double *res)
+void outputFile(double *G, int len) 
 {
-	for (int i = 0; i < col; i++)
-	{
-		res[i * row] = src[i * row + 1] - src[i * row];
-		for (int j = 1; j < row - 1; j++)
-		{
-			res[i * row + j] = (src[i * row + j + 1] - src[i * row + j - 1]) / 2;
-		}
-		res[(i + 1) * row - 1] = src[(i + 1) * row - 1] - src[(i + 1) * row - 2];
-	}
-}
+	ofstream outFile;
+	outFile.open("G.txt");
 
+	if (!outFile.is_open())
+	{
+		cout << "Could not open the file " << endl;
+		cout << "Program terminating." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < len; i++)
+		outFile << G[i] << endl;
+}
