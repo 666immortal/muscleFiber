@@ -40,7 +40,6 @@ void ImgProp::setG(const double *G)
 double ImgProp::getThresh(const double rate)
 {
 	int tmp = ceil(G_len * rate);
-	cout << "ceil : " << tmp << endl;
 	// 因为C与MATLAB的起始下标不同，所以要减1
 	return G_sort[tmp - 1];
 }
