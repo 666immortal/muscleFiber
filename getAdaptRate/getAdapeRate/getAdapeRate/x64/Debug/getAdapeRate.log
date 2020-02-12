@@ -1,6 +1,8 @@
-﻿  main.cpp
-d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\main.cpp(28): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\main.cpp(56): warning C4309: “=”: 截断常量值
-d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\main.cpp(75): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\main.cpp(76): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+﻿  getAdaptRate.cpp
+d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\getadaptrate.cpp(19): warning C4309: “=”: 截断常量值
+d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\getadaptrate.cpp(39): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\getadaptrate.cpp(40): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+  main.cpp
+d:\毕设\gd_c\getadaptrate\getadaperate\getadaperate\main.cpp(16): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  正在生成代码...
   getAdapeRate.vcxproj -> D:\毕设\GD_C\getAdaptRate\getAdapeRate\x64\Debug\getAdapeRate.exe

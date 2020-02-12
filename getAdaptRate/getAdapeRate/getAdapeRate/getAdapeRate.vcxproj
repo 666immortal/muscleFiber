@@ -140,10 +140,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="getAdaptRate.cpp" />
     <ClCompile Include="ImgProp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="getAdaptRate.h" />
     <ClInclude Include="ImgProp.h" />
     <ClInclude Include="MyArray.h" />
   </ItemGroup>

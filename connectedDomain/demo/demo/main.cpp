@@ -46,21 +46,3 @@ int main()
 
 	return 0;
 }
-
-int getMax(double *data, int len)
-{
-	int res = 0;
-	for (int i = 1; i < len; i++)
-		if (data[res] < data[i])
-			res = i;
-	return res;
-}
-
-int getMin(double *data, int len)
-{
-	int res = 0;
-	for (int i = 1; i < len; i++)
-		if (data[res] > data[i])
-			res = i;
-	return res;
-}

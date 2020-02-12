@@ -1,0 +1,16 @@
+﻿  main.cpp
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(21): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(31): warning C4309: “=”: 截断常量值
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(37): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(38): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(52): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(53): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+  cluster.vcxproj -> D:\毕设\GD_C\cluster\cluster\x64\Debug\cluster.exe
