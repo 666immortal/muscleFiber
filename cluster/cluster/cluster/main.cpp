@@ -6,10 +6,16 @@
 #include "getAdaptRate.h"
 
 #define IM_HEIGHT 360
+#define CLUSTER_SIZE 3
+
 using namespace std;
 using namespace cv;
 
 void inputFile(const char *filename, vector<double> &res);
+void BubbleSort(int  *p, int length, int * ind_diff);
+int findMaxIndx(double *data, int len);
+vector<Point> getPointOfFascia(const vector<Point> &points, const MyArray<double> &G);
+void classifyPoint(const Mat &points, const Mat &labels, const Mat &centers, int pointsCount, vector<Point> *point_set);
 
 int main()
 {
@@ -61,7 +67,7 @@ int main()
 			}			
 		}
 		
-	cv::kmeans(points, 3, labels, cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 10, 1.0),
+	cv::kmeans(points, CLUSTER_SIZE, labels, cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 10, 1.0),
 		                             50, KMEANS_PP_CENTERS, centers);
 
 	cv::Scalar colorTab[] = {
@@ -81,38 +87,38 @@ int main()
 		cv::circle(img, ipt, 1, colorTab[clusterIdx], cv::FILLED, cv::LINE_AA);
 	}
 
-	int row[3] = { 0, 0, 0 }, col[3] = { 0, 0, 0 }, num[3] = { 0, 0, 0 };
-	for (int i = 0; i < pointsCount; i++)
-	{
-		int clusterIdx = labels.at<int>(i);
-		row[clusterIdx] += points.at<cv::Point2f>(i).x;
-		col[clusterIdx] += points.at<cv::Point2f>(i).y;
-		num[clusterIdx]++;
-	}
-	double mean_row[3], mean_col[3];
 	for (int i = 0; i < 3; i++)
 	{
-		mean_row[i] = row[i] / num[i];
-		mean_col[i] = col[i] / num[i];
+		Point pc = Point(centers.at<float>(i, 0), centers.at<float>(i, 1));
+		cout << pc << endl;
+		cv::circle(img, pc, 3, colorTab[4], cv::FILLED, cv::LINE_AA);
 	}
-
-	cout << "mean_row : " << mean_row[0] << " " << mean_row[1] << " " << mean_row[2] << endl;
-	cout << "mean_col : " << mean_col[0] << " " << mean_col[1] << " " << mean_col[2] << endl;
-
-	cv::Point p[3] = { Point(mean_row[0], mean_col[0]),
-							Point(mean_row[1], mean_col[1]),
-							Point(mean_row[2], mean_col[2]), };
-
-	cv::circle(img, p[0], 3, colorTab[4], cv::FILLED, cv::LINE_AA);
-	cv::circle(img, p[1], 3, colorTab[4], cv::FILLED, cv::LINE_AA);
-	cv::circle(img, p[2], 3, colorTab[4], cv::FILLED, cv::LINE_AA);
 
 	Mat tran_img;
 	transpose(img, tran_img);
 	cv::imshow("clusters", tran_img);
 	//imwrite("cluster_res.bmp", tran_img);
-	waitKey(0);
 
+	vector<Point> point_set[CLUSTER_SIZE];
+	// 将点分类并按大小顺序装到不同的容器中
+	classifyPoint(points, labels, centers, pointsCount, point_set);
+	
+	vector<Point> points_of_low_fascia = getPointOfFascia(point_set[0], GG);
+	vector<Point> points_of_high_fascia = getPointOfFascia(point_set[2], GG);
+
+	// 画出寻找筋膜的结果
+	Mat low_fascia = Mat(ImgProp::wid, ImgProp::len, CV_8UC1);
+	low_fascia.setTo(Scalar(0));
+	for (int i = 0; i < points_of_low_fascia.size(); i++)
+		low_fascia.at<uchar>(points_of_low_fascia[i].y, points_of_low_fascia[i].x) = 255;
+
+	for (int i = 0; i < points_of_high_fascia.size(); i++)
+		low_fascia.at<uchar>(points_of_high_fascia[i].y, points_of_high_fascia[i].x) = 255;
+
+	imshow("res", low_fascia);
+
+	waitKey(0);
+	
 	delete[] peaks_mask;
 	return 0;
 }
@@ -141,4 +147,94 @@ void inputFile(const char *filename, vector<double> &res)
 	else
 		cout << "Input terminated for unknown reason.\n";
 	fin.close();
+}
+
+// 由冒泡排序法得到索引
+void BubbleSort(int  *p, int length, int * ind_diff)
+{
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = 0; j < length - i - 1; j++)
+		{
+			// 由大到小排序
+			if (p[j] < p[j + 1])
+			{
+				int temp = p[j];
+				p[j] = p[j + 1];
+				p[j + 1] = temp;
+
+				int ind_temp = ind_diff[j];
+				ind_diff[j] = ind_diff[j + 1];
+				ind_diff[j + 1] = ind_temp;
+			}
+		}
+	}
+}
+
+int findMaxIndx(double *data, int len)
+{
+	int res = 0;
+	for (int i = 1; i < len; i++)
+		if (data[res] < data[i])
+			res = i;
+	return res;
+}
+
+// 定位筋膜所在的坐标位置，返回点
+vector<Point> getPointOfFascia(const vector<Point> &points, const MyArray<double> &G)
+{
+	Mat pcm = Mat(ImgProp::wid, ImgProp::len, CV_8UC1);
+	pcm.setTo(Scalar(0));
+	for (int i = 0; i < points.size(); i++)
+		pcm.at<uchar>(points[i].y, points[i].x) = 255;
+
+	Mat con_labels, stats, centroids;
+	int nccomps = connectedComponentsWithStats(pcm, con_labels, stats, centroids);
+
+	double *pclw = new double[nccomps - 1]();
+	vector<Point> *points_of_con = new vector<Point>[nccomps - 1];
+
+	int tmp_indx = 0;
+	for (int j = 0; j < con_labels.rows; j++)
+		for (int k = 0; k < con_labels.cols; k++)
+		{
+			if ((tmp_indx = con_labels.at<int>(j, k)) != 0)
+			{
+				// 累加权值
+				pclw[tmp_indx - 1] += G.pointer[j * con_labels.cols + k];
+				// 保存点的坐标位置到相应的容器中
+				points_of_con[tmp_indx - 1].push_back(Point(k, j));
+			}
+		}
+
+	// 找到权值序列中的最大值的索引
+	int max_ind = findMaxIndx(pclw, nccomps - 1);
+	vector<Point> points_of_low_fascia = points_of_con[max_ind];
+
+	delete[] points_of_con;
+	delete[] pclw;
+
+	return points_of_low_fascia;
+}
+
+void classifyPoint(const Mat &points, const Mat &labels, const Mat &centers, int pointsCount, vector<Point> *point_set)
+{
+	int clu_sort[CLUSTER_SIZE];
+	int clu_ind[CLUSTER_SIZE];
+	for (int i = 0; i < CLUSTER_SIZE; i++)
+	{
+		clu_sort[i] = centers.at<float>(i, 0);
+		clu_ind[i] = i;
+	}
+
+	BubbleSort(clu_sort, CLUSTER_SIZE, clu_ind);
+	int clu_ind_inv[CLUSTER_SIZE];
+	// 调换索引的关系，使得分配更快
+	for (int i = 0; i < CLUSTER_SIZE; i++)
+		clu_ind_inv[clu_ind[i]] = i;
+	// 将聚类得到的各个结果分别存放在各个容器内
+	for (int i = 0; i < pointsCount; i++)
+	{
+		point_set[clu_ind_inv[labels.at<int>(i)]].push_back(points.at<cv::Point2f>(i));
+	}
 }
