@@ -14,7 +14,11 @@ using namespace cv;
 void inputFile(const char *filename, vector<double> &res);
 void BubbleSort(int  *p, int length, int * ind_diff);
 int findMaxIndx(double *data, int len);
+// 定位筋膜的坐标
 vector<Point> getPointOfFascia(const vector<Point> &points, const MyArray<double> &G);
+// 定位肌纤维的坐标
+vector<Point> getPointOfFiber(const vector<Point> &points, const MyArray<double> &G);
+// 对聚类之后的点进行分类
 void classifyPoint(const Mat &points, const Mat &labels, const Mat &centers, int pointsCount, vector<Point> *point_set);
 
 int main()
@@ -104,7 +108,8 @@ int main()
 	classifyPoint(points, labels, centers, pointsCount, point_set);
 	
 	vector<Point> points_of_low_fascia = getPointOfFascia(point_set[0], GG);
-	vector<Point> points_of_high_fascia = getPointOfFascia(point_set[2], GG);
+	vector<Point> points_of_high_fascia = getPointOfFascia(point_set[2], GG); 
+	vector<Point> points_of_fiber = getPointOfFiber(point_set[1], GG);
 
 	// 画出寻找筋膜的结果
 	Mat low_fascia = Mat(ImgProp::wid, ImgProp::len, CV_8UC1);
@@ -115,7 +120,32 @@ int main()
 	for (int i = 0; i < points_of_high_fascia.size(); i++)
 		low_fascia.at<uchar>(points_of_high_fascia[i].y, points_of_high_fascia[i].x) = 255;
 
-	imshow("res", low_fascia);
+	for (int i = 0; i < points_of_fiber.size(); i++)
+		low_fascia.at<uchar>(points_of_fiber[i].y, points_of_fiber[i].x) = 255;
+
+	Mat result;
+	transpose(low_fascia, result);
+	imshow("res", result);
+
+	// 计算下筋膜的位置
+	//double sum_y_low = 0, sum_x_low = 0, sum_G_low = 0;
+	//for (int i = 0; i < points_of_low_fascia.size(); i++)
+	//{
+	//	double tmp_GG = G[points_of_low_fascia[i].y * ImgProp::len + points_of_low_fascia[i].x];
+	//	sum_y_low += points_of_low_fascia[i].y * tmp_GG;
+	//	sum_x_low += points_of_low_fascia[i].x * tmp_GG;
+	//	sum_G_low += tmp_GG;
+	//}
+
+	// 计算上筋膜的位置
+	//double sum_y_high = 0, sum_x_high = 0, sum_G_high = 0;
+	//for (int i = 0; i < points_of_high_fascia.size(); i++)
+	//{
+	//	double tmp_GG = G[points_of_high_fascia[i].y * ImgProp::len + points_of_low_fascia[i].x];
+	//	sum_y_high += points_of_high_fascia[i].y * tmp_GG;
+	//	sum_x_high += points_of_high_fascia[i].x * tmp_GG;
+	//	sum_G_high += tmp_GG;
+	//}
 
 	waitKey(0);
 	
@@ -215,6 +245,48 @@ vector<Point> getPointOfFascia(const vector<Point> &points, const MyArray<double
 	delete[] pclw;
 
 	return points_of_low_fascia;
+}
+
+vector<Point> getPointOfFiber(const vector<Point> &points, const MyArray<double> &G)
+{
+	Mat pcm = Mat(ImgProp::wid, ImgProp::len, CV_8UC1);
+	pcm.setTo(Scalar(0));
+	for (int i = 0; i < points.size(); i++)
+		pcm.at<uchar>(points[i].y, points[i].x) = 255;
+
+	Mat con_labels, stats, centroids;
+	int nccomps = connectedComponentsWithStats(pcm, con_labels, stats, centroids);
+
+	vector<Point> *points_of_con = new vector<Point>[nccomps - 1];
+
+	int tmp_indx = 0;
+	for (int j = 0; j < con_labels.rows; j++)
+		for (int k = 0; k < con_labels.cols; k++)
+		{
+			if ((tmp_indx = con_labels.at<int>(j, k)) != 0)
+			{
+				// 保存点的坐标位置到相应的容器中
+				points_of_con[tmp_indx - 1].push_back(Point(k, j));
+			}
+		}
+
+	Mat im_G = Mat(ImgProp::wid, ImgProp::len, CV_64FC1, G.pointer);
+	vector<Point> fiber_points;
+
+	for (int i = 0; i < nccomps - 1; i++)
+	{
+		Mat im_mask = Mat(ImgProp::wid, ImgProp::len, CV_8UC1);
+		im_mask.setTo(Scalar(0));
+		for (int j = 0; j < points_of_con[i].size(); j++)
+			im_mask.at<uchar>(points_of_con[i][j].y, points_of_con[i][j].x) = 255;
+		double tmp;
+		Point tmp_p;
+		minMaxLoc(im_G, NULL, &tmp, NULL, &tmp_p, im_mask);
+		fiber_points.push_back(tmp_p);
+	}
+
+	delete[] points_of_con;
+	return fiber_points;
 }
 
 void classifyPoint(const Mat &points, const Mat &labels, const Mat &centers, int pointsCount, vector<Point> *point_set)
