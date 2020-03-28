@@ -1,0 +1,4 @@
+﻿  Processor.cpp
+d:\毕设\gd_c\combine\combine\radon.h(5): warning C4005: “MAX”: 宏重定义
+  d:\opencv lib\opencv\build\include\opencv2\core\cvdef.h(413): note: 参见“MAX”的前一个定义
+  Combine.vcxproj -> D:\毕设\GD_C\Combine\x64\Debug\Combine.exe

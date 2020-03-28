@@ -1,19 +1,19 @@
 ﻿  main.cpp
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(28): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(39): warning C4309: “=”: 截断常量值
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(45): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(46): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(65): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(31): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(42): warning C4309: “=”: 截断常量值
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(48): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(49): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(68): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(66): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(69): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
           ]
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(93): warning C4244: “参数”: 从“_Tp”转换到“_Tp”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(96): warning C4244: “参数”: 从“_Tp”转换到“_Tp”，可能丢失数据
           with
           [
               _Tp=float
@@ -22,7 +22,7 @@ d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(93): warning C4244: “参数”
           [
               _Tp=int
           ]
-d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(275): warning C4244: “=”: 从“const _Tp”转换到“int”，可能丢失数据
+d:\毕设\gd_c\cluster\cluster\cluster\main.cpp(298): warning C4244: “=”: 从“const _Tp”转换到“int”，可能丢失数据
           with
           [
               _Tp=float
